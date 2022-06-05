@@ -1,110 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Verifier Leaderboard</title>
-  </head>
-  <body>
-    <style type="text/css">
-      @font-face {
-        font-family: 'minecraftregular';
-        src: url('minecraftregular-bmg3-webfont.woff2') format('woff2'),
-             url('minecraftregular-bmg3-webfont.woff') format('woff');
-        font-weight: normal;
-        font-style: normal;
-      }
-      body{
-        background-color: #000000;
-      }
-      #output{
-        font-size: 500%;
-        /*font-family: Sans-serif;*/
-        font-family: minecraftregular;
-         background-image: -webkit-linear-gradient(left, #f00, #ff2b00, #f50, #ff8000, #fa0, #ffd500, #ff0, #d4ff00, #af0, #80ff00, #5f0, #2bff00, #0f0, #00ff2a, #0f5, #00ff80, #0fa, #00ffd5, #0ff, #00d5ff, #0af, #0080ff, #05f, #002aff, #00f, #2b00ff, #50f, #8000ff, #a0f, #d400ff, #f0f, #ff00d4, #f0a, #ff0080, #f05, #ff002b, #f00);
-    -webkit-animation: animatedBackground_a 5s linear infinite alternate;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: #0000;
-    background-clip: text;
-        /*color: #ffffff;*/
-        table-layout: auto;
-        width: 100%;
-        border-collapse: collapse;
-        }
-
-@keyframes animatedBackground_a {
-    0% { background-position: 0 0 }
-    100% { background-position: -500px 0 }
-  
-      }
-      td{
-        /*border: 5px solid #99aab5;*/
-        /*border: 2px solid #2c2f33;*/
-        padding: 10px;
-      }
-    </style>
-    <table id="output">
-    </table>
-    <script type="text/javascript">
-      const HEADER = "https://www.speedrun.com/api/v1/";
-
-      async function json_from_url_await(url) {
-        return await fetch(url)
-                     .then(resp => resp.json());
-      }
-
-      async function json_from_src_await(short_url) {
-        return await json_from_url_await(HEADER + short_url);
-      }
-
-      async function continual_data_await(short_url) {
-        let hold = [];
-
-        async function next_await(json) {
-          hold.push(...json.data);
-          if (!("pagination" in json) || (json.pagination.size < 200))
-            return;
-          let linkMap = json.pagination.links.reduce((newObj, x) => ({...newObj, [x.rel]: x.uri}), {});
-          await json_from_url_await(linkMap.next)
-                              .then(json => next_await(json));
-        }
-
-        return await json_from_src_await(short_url + (short_url.includes("?") ? "&max=200" : "?max=200"))
-                                   .then(json => next_await(json))
-                                   .then(() => hold);
-      }
-
-      async function main() {
-        let game = "j1ne5zy1";
-        let game2 = "nd2e9erd";
-        let gameObj = await json_from_src_await(`games/${game}?embed=moderators`);
-        let modsObj = await gameObj.data.moderators.data;
-        let nameMap = await modsObj.reduce((newObj, x) => ({...newObj, [x.id]: x.names.international}), {});
-        let moderators = await Object.keys(nameMap);
-        let dict = await moderators.reduce((newObj, x) => ({...newObj, [x]: 0}), {});
-
-        await(async function () {
-          let hold = [];
-          for (let mod of moderators) {
-            hold.push(continual_data_await(`runs?game=${game}&examiner=${mod}`)
-                                     .then(list => list.length)
-                                     .then(function (len) {dict[mod] += len;}));
-           }
-          await Promise.all(hold);
-          let modsArray = [];
-          for (mod in dict)
-            modsArray.push([mod, dict[mod]]);
-          modsArray.sort(function(a, b) {return b[1] - a[1];});
-
-          let output = "";
-          for (let i = 1; i <= modsArray.length; i++) {
-            let mod = modsArray[i - 1];
-            output += `<tr><td>${i}</td><td>${nameMap[mod[0]]}</td><td>${mod[1]}</td></tr>`;
-          }
-          document.getElementById("output").innerHTML = output;
-        }());
-      }
-
-      main();
-    </script>
-  </body>
+<html>
+<head>
+<title>
+ASdDASd</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="sdasd">
+<style>
+body {background-color:#ffffff;background-repeat:no-repeat;background-position:top left;background-attachment:fixed;}
+h1{font-family:Arial, sans-serif;color:#000000;background-color:#ffffff;}
+p {font-family:Georgia, serif;font-size:14px;font-style:normal;font-weight:normal;color:#000000;background-color:#ffffff;}
+</style>
+</head>
+<body>
+<h1>asdafasdfsadsfg</h1>
+<p></p>
+</body>
 </html>
