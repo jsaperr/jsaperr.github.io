@@ -74,12 +74,10 @@
       }
 
       async function main() {
-        let game = "j1npme6p";
+        let game = "j1ne5zy1";
         let game2 = "nd2e9erd";
         let gameObj = await json_from_src_await(`games/${game}?embed=moderators`);
-        let game2Obj = await json_from_src_await(`games/${game2}?embed=moderators`);
         let modsObj = await gameObj.data.moderators.data;
-        await modsObj.push(...game2Obj.data.moderators.data);
         let nameMap = await modsObj.reduce((newObj, x) => ({...newObj, [x.id]: x.names.international}), {});
         let moderators = await Object.keys(nameMap);
         let dict = await moderators.reduce((newObj, x) => ({...newObj, [x]: 0}), {});
@@ -90,10 +88,7 @@
             hold.push(continual_data_await(`runs?game=${game}&examiner=${mod}`)
                                      .then(list => list.length)
                                      .then(function (len) {dict[mod] += len;}));
-            hold.push(continual_data_await(`runs?game=${game2}&examiner=${mod}`)
-                                     .then(list => list.length)
-                                     .then(function (len) {dict[mod] += len;}));
-          }
+           }
           await Promise.all(hold);
           let modsArray = [];
           for (mod in dict)
